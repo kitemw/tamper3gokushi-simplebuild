@@ -19,9 +19,30 @@
 "use strict";
 
 // ここにある施設を自動建設する。BUILDKEYSを変更したら、canBuildAnyFacilityのcostsも変える必要あり。
-var BUILDKEYS = [["wood", "伐採所", 15], ["stone", "石切り場", 15],
-    ["iron", "製鉄所", 15], ["rice", "畑", 15],
-    ["souko", "倉庫", 20], ["shukusha", "宿舎", 15]];
+var BUILDKEYS = [
+    ["wood", "伐採所"], ["stone", "石切り場"],
+    ["iron", "製鉄所"], ["rice", "畑"],
+    ["souko", "倉庫"], ["shukusha", "宿舎"]
+    /*
+     , ["kyoten", "拠点"]  // 城はMaxLevel20、村と砦はMaxLevel15。注意。
+     , ["ichiba", "市場"]
+     , ["renpei", "練兵所"]
+     , ["kajiba", "鍛冶場"]
+     , ["bougu", "防具工場"]
+     , ["kenkyu", "研究所"]
+     , ["doujaku", "銅雀台"]
+     , ["heiki", "兵器工房"]
+     , ["heisha", "兵舎"]
+     , ["yumi", "弓兵舎"]
+     , ["uma", "厩舎"]
+     , ["miharidai", "見張り台"]
+     , ["daishukusha", "大宿舎"]
+     , ["kunren", "訓練所"]
+     , ["enseikunren", "遠征訓練所"]
+     , ["suisha", "水車"]
+     , ["kojo", "工場"]
+     */
+];
 var GMKEY = location.hostname + "-villages"; // GM_{get|set}valueに使うキー
 
 // *** プログラムの起動はここから。 ***
@@ -318,11 +339,24 @@ function appendLevelForm(params) {
     var n = BUILDKEYS.length;
     for (var i = 0; i < n; i++) {
         var key = BUILDKEYS[i][0];
+        var name = BUILDKEYS[i][1];
+        var mLevel;
+        if (name === '拠点') {
+            if (currentIndex === 0) { // 本拠地
+                mLevel = getMaxFacilityLevel("城");
+            }
+            else {
+                mLevel = getMaxFacilityLevel("村"); // 砦であってもMaxLevelは同じ
+            }
+        } else {
+            mLevel = getMaxFacilityLevel(name);
+        }
+        
         var elemTr = document.createElement('tr');
         //var elemTr = jQuery('<tr>');
 
         var elemTd1 = document.createElement('td');
-        elemTd1.innerHTML = BUILDKEYS[i][1];
+        elemTd1.innerHTML = name;
         //var elemTd1 = jQuery('<td>', {"text": BUILDKEYS[i][1]});
         elemTr.appendChild(elemTd1);
 
@@ -332,7 +366,7 @@ function appendLevelForm(params) {
         elemText.setAttribute('type', 'number');
         elemText.setAttribute('name', key);
         elemText.setAttribute('min', '0');
-        elemText.setAttribute('max', BUILDKEYS[i][2]);
+        elemText.setAttribute('max', mLevel);
         elemText.setAttribute('value', forms[key]);
         //var elemText = jQuery('<input>', {"type": "number", "name": key, "min": "0", "max": BUILDKEYS[i][2], "value": forms[key]});
         elemText.setAttribute('style', "width:35px;");
@@ -564,7 +598,7 @@ function getUserProf(htmldoc) {
 }
 
 /**
- * village_idで指定した村はparamsの何番目の配列にあるかを返す。
+ * village_idで指定した村がparamsの何番目の配列にあるかを返す。
  * @param {Array} params - loadParamsでロードした情報
  * @param {string} village_id - 村ID
  * @returns {number} params[i]のi。見つからなければ-1を返す。
@@ -1307,6 +1341,27 @@ function getNextVillageUrl(params, currentVillageId) {
             return obj.url;
         }
     }
+}
+
+/**
+ * nameで指定した施設の最大レベルを得る。
+ * @param {string} name - 施設の名前。日本語。
+ * @returns {number} 最大レベルの数字。nameで見つからなかったときは-1を返す
+ */
+function getMaxFacilityLevel(name) {
+    var dic = {
+        "伐採所": 15, "石切り場": 15, "製鉄所": 15, "畑": 15,
+        "城": 15, "砦": 15, "村": 15, "倉庫": 20, "市場": 10,
+        "宿舎": 15, "練兵所": 10, "鍛冶場": 10, "防具工場": 10,
+        "研究所": 10, "銅雀台": 10, "兵器工房": 15,
+        "兵舎": 15, "弓兵舎": 15, "厩舎": 15, "見張り台": 16,
+        "大宿舎": 20, "訓練所": 10, "遠征訓練所": 13,
+        "水車": 10, "工場": 10
+    };
+    if (dic.hasOwnProperty(name)) {
+        return dic[name];
+    }
+    return -1;
 }
 
 /**
