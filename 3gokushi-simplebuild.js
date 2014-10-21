@@ -23,7 +23,6 @@ var BUILDKEYS = [
     ["wood", "伐採所"], ["stone", "石切り場"],
     ["iron", "製鉄所"], ["rice", "畑"],
     ["souko", "倉庫"], ["shukusha", "宿舎"]
-    /*
      , ["kyoten", "拠点"]  // 城はMaxLevel20、村と砦はMaxLevel15。注意。
      , ["ichiba", "市場"]
      , ["renpei", "練兵所"]
@@ -41,7 +40,6 @@ var BUILDKEYS = [
      , ["enseikunren", "遠征訓練所"]
      , ["suisha", "水車"]
      , ["kojo", "工場"]
-     */
 ];
 var GMKEY = location.hostname + "-villages"; // GM_{get|set}valueに使うキー
 
@@ -87,10 +85,6 @@ function main() {
     // 現在処理中の作業を取得する。但し施設建設に関するデータのみ。
     // 研究や武器強化等はactionsには含まない。
     var actions = getActions();
-    /*
-     * for (var i = 0; i < actions.length; i++) { var a = actions[i];
-     * mydebug("actions = (" + a.status + " at " + a.dx + ":" + a.dy + ")"); }
-     */
 
     // 建設中の施設があるときには何もせずリターンする。
     // 削除中の施設があるときも同様（何もしない）。
@@ -173,7 +167,6 @@ function getMapData() {
         f.level = parseInt(result[1], 10);
         facs.push(f);
     }
-    mydebug("facs.length=" + facs.length);
     facs.sort(function (a, b) { // レベルが低い順に並べる
         return a.level - b.level;
     });
@@ -220,7 +213,6 @@ function getActions() {
         } else {
             continue;
         }
-        mydebug("s=" + s);
         result = s.match(/x=(\d+)&amp;y=(\d+)/);
         res.dx = parseInt(result[1], 10);
         res.dy = parseInt(result[2], 10);
@@ -242,7 +234,6 @@ function loadParams() {
         return null;
     }
     var res = JSON.parse(json_text);
-    mydebug("loadParams: res=" + res);
     return res;
 }
 
@@ -253,7 +244,8 @@ function loadParams() {
  * @returns {undefined} なし。
  */
 function saveParams(params) {
-    var json_text = params.toJSON();  //  JSON.stringify(params);
+    // prototype 1.6.0.2の下ではJSON.stringify(配列)がバグるためtoJSONを使う
+    var json_text = params.toJSON();
     mydebug("saveParams: json_text=" + json_text);
     mysetValue(GMKEY, json_text);
 }
@@ -280,7 +272,7 @@ function mysetValue(key, value) {
 }
 
 /**
- * 村・砦画面の右側sidebarに、レベル設定用フォームを追加する
+ * 村・砦画面の下側に、レベル設定用フォームを追加する
  * @param {Array} params - loadParamsでロードした情報
  * @returns {undefined} なし
  */
@@ -292,27 +284,129 @@ function appendLevelForm(params) {
 
     var elemDiv = document.createElement('div');
     elemDiv.setAttribute('class', 'sideBox');
-    //var elemDiv = jQuery('<div>', {"class": "sideBox"});
+    elemDiv.setAttribute('style', "color: #fff; background: #333; font-size: 10px; padding: 5px 10px;");
 
     var elemDiv2 = document.createElement('div');
     elemDiv2.setAttribute('class', 'sideBoxHead');
-    //var elemDiv2 = jQuery('<div>', {"class": "sideBoxHead"});
     var elemH3 = document.createElement('h3');
     //var elemH3 = jQuery('<h3>');
     var elemStrong = document.createElement('strong');
     elemStrong.innerHTML = "village " + village_id;
-    //var elemStrong = jQuery('<strong>', {"text": "village " + village_id});
     elemH3.appendChild(elemStrong);
     elemDiv2.appendChild(elemH3);
     elemDiv.appendChild(elemDiv2);
 
     var elemDiv3 = document.createElement('div');
     elemDiv3.setAttribute('class', 'sideBoxInner');
-    //var elemDiv3 = jQuery('<div>', {"class": "sideBoxInner"});
     var elemForm = document.createElement('form');
     elemForm.setAttribute('name', 'simplebuild');
-    //var elemForm = jQuery('<form>', {"name": "simplebuild"});
     var elemTable = document.createElement('table');
+    var s1 = sformat('\
+                <tbody>\
+                    <tr>\
+                        <td>有効</td>\
+                        <td><input type="checkbox" name="validity" {checked}></td>\
+                        <td colspan="9">&nbsp;</td>\
+                    </tr>', {"checked": ((forms.validity === "checked") ?  'checked="checked"' : '')});
+    var s2 = sformat('\
+                    <tr>\
+                        <td>伐採所</td>\
+                        <td><input name="wood" type="number" min="0" max="15" value="{wood}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>拠点</td>\
+                        <td><input name="kyoten" type="number" min="0" max="15" value="{kyoten}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>練兵所</td>\
+                        <td><input name="renpei" type="number" min="0" max="10" value="{renpei}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>銅雀台</td>\
+                        <td><input name="doujaku" type="number" min="0" max="10" value="{doujaku}"></td>\
+                    </tr>\
+                    <tr>\
+                        <td>石切り場</td>\
+                        <td><input name="stone" type="number" min="0" max="15" value="{stone}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>倉庫</td>\
+                        <td><input name="souko" type="number" min="0" max="20" value="{souko}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>鍛冶場</td>\
+                        <td><input name="kajiba" type="number" min="0" max="10" value="{kajiba}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>兵器工房</td>\
+                        <td><input name="heiki" type="number" min="0" max="15" value="{heiki}"></td>\
+                    </tr>\
+                    <tr>\
+                        <td>製鉄所</td>\
+                        <td><input name="iron" type="number" min="0" max="15" value="{iron}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>市場</td>\
+                        <td><input name="ichiba" type="number" min="0" max="10" value="{ichiba}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>防具工場</td>\
+                        <td><input name="bougu" type="number" min="0" max="10" value="{bougu}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>&nbsp;</td>\
+                        <td>&nbsp;</td>\
+                    </tr>\
+                    <tr>\
+                        <td>畑</td>\
+                        <td><input name="rice" type="number" min="0" max="15" value="{rice}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>宿舎</td>\
+                        <td><input name="shukusha" type="number" min="0" max="15" value="{shukusha}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>研究所</td>\
+                        <td><input name="kenkyu" type="number" min="0" max="10" value="{kenkyu}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>&nbsp;</td>\
+                        <td>&nbsp;</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="8">&nbsp;</td>\
+                    </tr>\
+                    <tr>\
+                        <td>兵舎</td>\
+                        <td><input name="heisha" type="number" min="0" max="15" value="{heisha}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>見張り台</td>\
+                        <td><input name="miharidai" type="number" min="0" max="16" value="{miharidai}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>訓練所</td>\
+                        <td><input name="kunren" type="number" min="0" max="10" value="{kunren}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>水車</td>\
+                        <td><input name="suisha" type="number" min="0" max="10" value="{suisha}"></td>\
+                    </tr>\
+                    <tr>\
+                        <td>弓兵舎</td>\
+                        <td><input name="yumi" type="number" min="0" max="15" value="{yumi}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>大宿舎</td>\
+                        <td><input name="daishukusha" type="number" min="0" max="20" value="{daishukusha}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>遠征訓練所</td>\
+                        <td><input name="enseikunren" type="number" min="0" max="13" value="{enseikunren}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>工場</td>\
+                        <td><input name="kojo" type="number" min="0" max="10" value="{kojo}"></td>\
+                    </tr>\
+                    <tr>\
+                        <td>厩舎</td>\
+                        <td><input name="uma" type="number" min="0" max="15" value="{uma}"></td>\
+                        <td>&nbsp;</td>\
+                        <td>&nbsp;</td>\
+                        <td>&nbsp;</td>\
+                        <td>&nbsp;</td>\
+                        <td>&nbsp;</td>\
+                        <td>&nbsp;</td>\
+                        <td>&nbsp;</td>\
+                        <td>&nbsp;</td>\
+                        <td>&nbsp;</td>\
+                    </tr>\
+                </tbody>\
+    ', forms);
+    elemTable.innerHTML = s1 + s2;
+/*
     elemTable.setAttribute('class', 'situationTable');
     //var elemTable = jQuery('<table>', {"class": "situationTable"});
     var elemTbody = document.createElement('tbody');
@@ -375,23 +469,26 @@ function appendLevelForm(params) {
         elemTbody.appendChild(elemTr);
     }
     elemTable.appendChild(elemTbody);
+ */
     elemForm.appendChild(elemTable);
 
     var elemSubmit = document.createElement('input');
     elemSubmit.setAttribute('type', 'button');
     elemSubmit.setAttribute('value', '保存');
-    //var elemSubmit = jQuery('<input>', {"type": "button", "value": "保存"});
     elemSubmit.addEventListener('click', saveFormData, false);
-    //elemSubmit.click(saveFormData);
     elemForm.appendChild(elemSubmit);
     elemSubmit = null; // メモリリーク防止
 
     elemDiv3.appendChild(elemForm);
     elemDiv.appendChild(elemDiv3);
 
+    var ww = document.getElementById('whiteWrapper');
+    var w1 = ww.children[0];
+    ww.insertBefore(elemDiv, w1.nextSibling);
+    /*
     var sb = document.getElementById('sidebar');
-    //var sb = jQuery("#sidebar");
     sb.appendChild(elemDiv);
+    */
 }
 
 /**
@@ -399,11 +496,7 @@ function appendLevelForm(params) {
  * @returns {undefined} なし
  */
 function saveFormData() {
-    var oldparams = loadParams(); // oldparamsは{}でないことは明らか
-    if (oldparams === null) {
-        mydebug("saveFormData: loadParam()の返り値がnullなのはおかしい。ソースをチェックしてください。");
-        return;
-    }
+    var oldparams = loadParams();
     var results = getCurrentVillageInfo(oldparams);
     var village_id = results.village_id;
 
@@ -553,12 +646,6 @@ function getUserProf(htmldoc) {
         // 拠点じゃなければ終了
         if (!isNumeric(popul))
             break;
-
-        /*
-         * mydebug("*** i = " + i + " ***"); mydebug("village_id=" +
-         * village_id); mydebug("xy=" + xy); mydebug("name=" + name);
-         * mydebug("url=" + url); mydebug("popul=" + popul);
-         */
 
         var newVil = new VillageData();
         newVil.village_id = village_id;
@@ -1109,9 +1196,32 @@ function canBuildAnyFacility(params, facilities) {
     ];
     */
     
-    // 
-    var costs = [cost_wood, cost_stone, cost_iron, cost_rice,
-        cost_souko, cost_shukusha];
+    var s = "";
+    var i;
+    var n = BUILDKEYS.length;
+    var key;
+    var sj;
+    for (i = 0; i < n - 1; i++) {
+        key = BUILDKEYS[i][0];
+        if (key === "kyoten") {
+            sj = facilities.toJSON();
+            if (sj.match(/城/) !== null) {
+                key = "shiro";
+            } else if (sj.match(/村/) !== null) {
+                key = "mura";
+            } else {
+                key = "toride";
+            }
+        }
+        s += "cost_" + key;
+        if (i !== n - 1) {
+            s += ",";
+        }
+    }
+    s = "var costs = [" + s + "];";
+    eval(s);  // evalは常に取り扱い注意
+    //var costs = [cost_wood, cost_stone, cost_iron, cost_rice,
+    //    cost_souko, cost_shukusha];
     var resources = [
         parseInt(jQuery('#wood').text(), 10),
         parseInt(jQuery('#stone').text(), 10),
@@ -1119,8 +1229,8 @@ function canBuildAnyFacility(params, facilities) {
         parseInt(jQuery('#rice').text(), 10)
     ];
 
-    var i, j;
-    var n = facilities.length;
+    var j;
+    n = facilities.length;
     var name;
     var lvl, v;
     for (i = 0; i < n; i++) {
@@ -1142,7 +1252,7 @@ function canBuildAnyFacility(params, facilities) {
             return i;
         }
     }
-    mydebug("資源が足りません。");
+    mydebug("建設可能な施設はありません。");
     return -1;
 
     function getBuildIndex(name) {
@@ -1346,7 +1456,7 @@ function getNextVillageUrl(params, currentVillageId) {
 /**
  * nameで指定した施設の最大レベルを得る。
  * @param {string} name - 施設の名前。日本語。
- * @returns {number} 最大レベルの数字。nameで見つからなかったときは-1を返す
+ * @returns {number} 最大レベルの数字。nameで見つからなかったときは0を返す
  */
 function getMaxFacilityLevel(name) {
     var dic = {
@@ -1361,7 +1471,22 @@ function getMaxFacilityLevel(name) {
     if (dic.hasOwnProperty(name)) {
         return dic[name];
     }
-    return -1;
+    return 0;
+}
+
+/**
+ * template文字列中にある"{ARG1}"をobjオブジェクト内の文字列に置換する
+ * @param {string} template - テンプレート
+ * @param {object} obj - オブジェクト
+ * @returns {string} テンプレート中のすべての{.}が置換された後の文字列。
+ * objのキーが存在しなかった場合、"{ARG1}"は0とする。
+ */
+function sformat(template, obj) {
+    return template.replace(/\{(.+?)\}/g, function(org, c) {
+        //mydebug("org=" + org + ", c=" + c);
+        //mydebug("obj[c]=" + obj[c]);
+        return obj.hasOwnProperty(c) ? obj[c] : 0;
+    });
 }
 
 /**
