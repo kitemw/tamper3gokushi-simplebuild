@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>3gokushi-simplebuild.js用テスト(QUnit)</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="//code.jquery.com/qunit/qunit-1.15.0.css">
+        <script src="//code.jquery.com/qunit/qunit-1.15.0.js"></script>
+        <script src="js/3gokushi-simplebuild.js"></script>
+        <script src="js/3gokushi-simplebuild-test.js"></script>
+    </head>
+    <body>
+        <div id="qunit"></div>
+        <div>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>有効</td>
+                        <td><input type="checkbox" name="validity" checked="checked"></td>
+                        <td colspan="6">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>伐採所</td>
+                        <td><input name="wood" type="number" min="0" max="15" value="6"></td>
+                        <td>拠点</td>
+                        <td><input name="kyoten" type="number" min="0" max="15" value="5"></td>
+                        <td>練兵所</td>
+                        <td><input name="renpei" type="number" min="0" max="10" value="5"></td>
+                        <td>銅雀台</td>
+                        <td><input name="doujaku" type="number" min="0" max="10" value="5"></td>
+                    </tr>
+                    <tr>
+                        <td>石切り場</td>
+                        <td><input name="stone" type="number" min="0" max="15" value="6"></td>
+                        <td>倉庫</td>
+                        <td><input name="souko" type="number" min="0" max="20" value="5"></td>
+                        <td>鍛冶場</td>
+                        <td><input name="kajiba" type="number" min="0" max="10" value="5"></td>
+                        <td>兵器工房</td>
+                        <td><input name="heiki" type="number" min="0" max="15" value="5"></td>
+                    </tr>
+                    <tr>
+                        <td>製鉄所</td>
+                        <td><input name="iron" type="number" min="0" max="15" value="6"></td>
+                        <td>市場</td>
+                        <td><input name="ichiba" type="number" min="0" max="10" value="5"></td>
+                        <td>防具工場</td>
+                        <td><input name="bougu" type="number" min="0" max="10" value="5"></td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="8">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>兵舎</td>
+                        <td><input name="heisha" type="number" min="0" max="15" value="6"></td>
+                        <td>見張り台</td>
+                        <td><input name="miharidai" type="number" min="0" max="16" value="5"></td>
+                        <td>訓練所</td>
+                        <td><input name="kunren" type="number" min="0" max="10" value="5"></td>
+                        <td>水車</td>
+                        <td><input name="suisha" type="number" min="0" max="10" value="5"></td>
+                    </tr>
+                    <tr>
+                        <td>弓兵舎</td>
+                        <td><input name="yumi" type="number" min="0" max="15" value="6"></td>
+                        <td>大宿舎</td>
+                        <td><input name="daishukusha" type="number" min="0" max="20" value="5"></td>
+                        <td>遠征訓練所</td>
+                        <td><input name="enseikunren" type="number" min="0" max="13" value="5"></td>
+                        <td>工場</td>
+                        <td><input name="kojo" type="number" min="0" max="10" value="5"></td>
+                    </tr>
+                    <tr>
+                        <td>厩舎</td>
+                        <td><input name="uma" type="number" min="0" max="15" value="6"></td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
