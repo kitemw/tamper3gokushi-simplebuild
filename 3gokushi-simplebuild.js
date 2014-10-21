@@ -13,7 +13,6 @@
 // @grant GM_deleteValue
 // @grant GM_listValues
 // @grant GM_xmlhttpRequest
-// @grant unsafeWindow
 // ==/UserScript==
 
 "use strict";
@@ -110,7 +109,7 @@ function main() {
     jQuery.post("http://" + location.hostname + "/facility/build.php",
             c, function () {
             });
-    var tid = unsafeWindow.setTimeout(function () {
+    var tid = setTimeout(function () {
         location.reload();
     }, 1000);
 }
@@ -521,7 +520,7 @@ function saveFormData() {
     saveParams(oldparams);
     newForms = oldparams = null;
     alert('保存しました');
-    var tid = unsafeWindow.setTimeout(function () {
+    var tid = setTimeout(function () {
         location.reload();
     }, 1000);
 }
@@ -565,7 +564,7 @@ function getCurrentVillageInfo(params) {
  * @returns {undefined} なし。実際はgetUserProf関数で様々な情報を得ている。
  */
 function getUserProfFromSite() {
-    unsafeWindow.setTimeout(function () {
+    setTimeout(function () {
         GM_xmlhttpRequest({
             method: "GET",
             url: "http://" + location.hostname + "/user/",
@@ -577,7 +576,7 @@ function getUserProfFromSite() {
                 var htmldoc = document.createElement("html");
                 htmldoc.innerHTML = x.responseText;
                 getUserProf(htmldoc);
-                var tid = unsafeWindow.setTimeout(function () {
+                var tid = setTimeout(function () {
                     location.reload();
                 }, 1000); // msec
             }
@@ -1382,7 +1381,7 @@ function saveOptionData() {
     mydebug("saveOptionData: json_text=" + json_text);
     mysetValue(GMKEY + "-Options", json_text);
     alert("保存しました。");
-    var tid = unsafeWindow.setTimeout(function () {
+    var tid = setTimeout(function () {
         location.reload();
     }, 1000);
 }
@@ -1417,11 +1416,11 @@ function setRedirect(params) {
     var nextVillageHref = getNextVillageUrl(params, currentVillageId);
     mydebug("setRedirect: next href=" + nextVillageHref);
     if (nextVillageHref === null) {
-        var tid = unsafeWindow.setTimeout(function () {
+        var tid = setTimeout(function () {
             location.reload();
         }, minute);
     } else {
-        var tid = unsafeWindow.setTimeout(function () {
+        var tid = setTimeout(function () {
             location.href = nextVillageHref;
         }, minute);
     }
