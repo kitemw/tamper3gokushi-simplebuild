@@ -1235,6 +1235,9 @@ function canBuildAnyFacility(params, facilities) {
     var lvl, v;
     for (i = 0; i < n; i++) {
         name = facilities[i].name;
+        if (name === "城" || name === "村" || name === "砦") {
+            name = "拠点";
+        }
         j = getBuildIndex(name);
         if (j === -1) {
             continue;
