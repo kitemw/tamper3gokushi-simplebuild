@@ -288,7 +288,6 @@ function appendLevelForm(params) {
     var elemDiv2 = document.createElement('div');
     elemDiv2.setAttribute('class', 'sideBoxHead');
     var elemH3 = document.createElement('h3');
-    //var elemH3 = jQuery('<h3>');
     var elemStrong = document.createElement('strong');
     elemStrong.innerHTML = "village " + village_id;
     elemH3.appendChild(elemStrong);
@@ -405,70 +404,6 @@ function appendLevelForm(params) {
                 </tbody>\
     ', forms);
     elemTable.innerHTML = s1 + s2;
-/*
-    elemTable.setAttribute('class', 'situationTable');
-    //var elemTable = jQuery('<table>', {"class": "situationTable"});
-    var elemTbody = document.createElement('tbody');
-    //var elemTbody = jQuery('<tbody>');
-    var elemTr0 = document.createElement('tr');
-    //var elemTr0 = jQuery('<tr>');
-    var elemTd0 = document.createElement('td');
-    elemTd0.innerHTML = '有効';
-    //var elemTd0 = jQuery('<td>', {"text": "有効"});
-    elemTr0.appendChild(elemTd0);
-    var elemTd01 = document.createElement('td');
-    //var elemTd01 = jQuery('<td>');
-    var elemCheckbox = document.createElement('input');
-    elemCheckbox.setAttribute('type', 'checkbox');
-    elemCheckbox.setAttribute('name', 'validity');
-    //var elemCheckbox = jQuery('<input>', {"type": "checkbox", "name": "validity"});
-    if (forms.validity === "checked") {
-        elemCheckbox.setAttribute('checked', 'checked');
-    }
-    elemTd01.appendChild(elemCheckbox);
-    elemTr0.appendChild(elemTd01);
-    elemTbody.appendChild(elemTr0);
-
-    var n = BUILDKEYS.length;
-    for (var i = 0; i < n; i++) {
-        var key = BUILDKEYS[i][0];
-        var name = BUILDKEYS[i][1];
-        var mLevel;
-        if (name === '拠点') {
-            if (currentIndex === 0) { // 本拠地
-                mLevel = getMaxFacilityLevel("城");
-            }
-            else {
-                mLevel = getMaxFacilityLevel("村"); // 砦であってもMaxLevelは同じ
-            }
-        } else {
-            mLevel = getMaxFacilityLevel(name);
-        }
-        
-        var elemTr = document.createElement('tr');
-        //var elemTr = jQuery('<tr>');
-
-        var elemTd1 = document.createElement('td');
-        elemTd1.innerHTML = name;
-        //var elemTd1 = jQuery('<td>', {"text": BUILDKEYS[i][1]});
-        elemTr.appendChild(elemTd1);
-
-        var elemTd2 = document.createElement('td');
-        //var elemTd2 = jQuery('<td>');
-        var elemText = document.createElement('input');
-        elemText.setAttribute('type', 'number');
-        elemText.setAttribute('name', key);
-        elemText.setAttribute('min', '0');
-        elemText.setAttribute('max', mLevel);
-        elemText.setAttribute('value', forms[key]);
-        //var elemText = jQuery('<input>', {"type": "number", "name": key, "min": "0", "max": BUILDKEYS[i][2], "value": forms[key]});
-        elemText.setAttribute('style', "width:35px;");
-        elemTd2.appendChild(elemText);
-        elemTr.appendChild(elemTd2);
-        elemTbody.appendChild(elemTr);
-    }
-    elemTable.appendChild(elemTbody);
- */
     elemForm.appendChild(elemTable);
 
     var elemSubmit = document.createElement('input');
@@ -476,7 +411,7 @@ function appendLevelForm(params) {
     elemSubmit.setAttribute('value', '保存');
     elemSubmit.addEventListener('click', saveFormData, false);
     elemForm.appendChild(elemSubmit);
-    elemSubmit = null; // メモリリーク防止
+    elemSubmit = null; // null代入でメモリリークを防止できるらしい。念のため。
 
     elemDiv3.appendChild(elemForm);
     elemDiv.appendChild(elemDiv3);
@@ -484,10 +419,6 @@ function appendLevelForm(params) {
     var ww = document.getElementById('whiteWrapper');
     var w1 = ww.children[0];
     ww.insertBefore(elemDiv, w1.nextSibling);
-    /*
-    var sb = document.getElementById('sidebar');
-    sb.appendChild(elemDiv);
-    */
 }
 
 /**
@@ -664,18 +595,6 @@ function getUserProf(htmldoc) {
             newVil.forms = oldparams[currentIndex].forms;
         }
         newparams.push(newVil);
-        /*
-         if (oldobj && oldobj[village_id] && oldobj[village_id].forms) {
-         newVil.forms = oldobj[village_id].forms;
-         } else {
-         var newForm = {};
-         for (var key in BUILDKEYS) {
-         newForm[key] = 0;
-         }
-         newVil.forms = newForm;
-         }
-         newparams[village_id] = newVil;
-         */
     }
 
     // 保存
@@ -796,7 +715,6 @@ function isKyotenXYSame(params, xyarray) {
     var i;
     var p;
     for (i = 0; i < pn; i++) {
-        //pk = pkeys[i];
         p = params[i].xy;
         if (xyarray.indexOf(p) === -1) { // 見たことがないxy座標を発見した
             return false;
@@ -1278,43 +1196,31 @@ function appendOptionSettingWindow() {
     
     var elemDiv = document.createElement('div');
     elemDiv.setAttribute('class', 'sideBox');
-    //var elemDiv = jQuery('<div>', {"class": "sideBox"});
 
     var elemDiv2 = document.createElement('div');
     elemDiv2.setAttribute('class', 'sideBoxHead');
-    //var elemDiv2 = jQuery('<div>', {"class": "sideBoxHead"});
     var elemH3 = document.createElement('h3');
-    //var elemH3 = jQuery('<h3>');
     var elemStrong = document.createElement('strong');
     elemStrong.innerHTML = "sbオプション設定";
-    //var elemStrong = jQuery('<strong>', {"text": "sbオプション設定"});
     elemH3.appendChild(elemStrong);
     elemDiv2.appendChild(elemH3);
     elemDiv.appendChild(elemDiv2);
 
     var elemDiv3 = document.createElement('div');
     elemDiv3.setAttribute('class', 'sideBoxInner');
-    //var elemDiv3 = jQuery('<div>', {"class": "sideBoxInner"});
     var elemForm = document.createElement('form');
     elemForm.setAttribute('name', 'simplebuildoption');
-    //var elemForm = jQuery('<form>', {"name": "simplebuildoption"});
     var elemTable = document.createElement('table');
     elemTable.setAttribute('class', 'situationTable');
-    //var elemTable = jQuery('<table>', {"class": "situationTable"});
     var elemTbody = document.createElement('tbody');
-    //var elemTbody = jQuery('<tbody>');
     var elemTr0 = document.createElement('tr');
-    //var elemTr0 = jQuery('<tr>');
     var elemTd0 = document.createElement('td');
     elemTd0.innerHTML = '巡回する';
-    //var elemTd0 = jQuery('<td>', {"text": "巡回する"});
     elemTr0.appendChild(elemTd0);
     var elemTd01 = document.createElement('td');
-    //var elemTd01 = jQuery('<td>');
     var elemCheckbox = document.createElement('input');
     elemCheckbox.setAttribute('type', 'checkbox');
     elemCheckbox.setAttribute('name', 'circ');
-    //var elemCheckbox = jQuery('<input>', {"type": "checkbox", "name": "circ"});
     if (opObj.ci === "checked") {
         elemCheckbox.setAttribute('checked', 'checked');
     }
@@ -1323,13 +1229,10 @@ function appendOptionSettingWindow() {
     elemTbody.appendChild(elemTr0);
 
     var elemTr = document.createElement('tr');
-    //var elemTr = jQuery('<tr>');
     var elemTd1 = document.createElement('td');
     elemTd1.innerHTML = '巡回間隔(分)';
-    //var elemTd1 = jQuery('<td>', {"text": "巡回間隔(分)"});
     elemTr.appendChild(elemTd1);
     var elemTd2 = document.createElement('td');
-    //var elemTd2 = jQuery('<td>');
     var elemNumber = document.createElement('input');
     elemNumber.setAttribute('type', 'number');
     elemNumber.setAttribute('name', 'intervalMinute');
@@ -1337,12 +1240,6 @@ function appendOptionSettingWindow() {
     elemNumber.setAttribute('max', '24');
     elemNumber.setAttribute('step', '3');
     elemNumber.setAttribute('value', opObj.im);
-    //var elemNumber = jQuery('<input>', {
-    //    "type": "number",
-    //    "name": "intervalMinute",
-    //    "min": "3", "max": "24", "step": "3",
-    //    "value": opObj.im
-    //});
     elemNumber.setAttribute('style', 'width:35pm');
     elemTd2.appendChild(elemNumber);
     elemTr.appendChild(elemTd2);
@@ -1354,17 +1251,25 @@ function appendOptionSettingWindow() {
     var elemSubmit = document.createElement('input');
     elemSubmit.setAttribute('type', 'button');
     elemSubmit.setAttribute('value', '保存');
-    //var elemSubmit = jQuery('<input>', {"type": "button", "value": "保存"});
     elemSubmit.addEventListener('click', saveOptionData, false);
-    //elemSubmit.click(saveOptionData);
     elemForm.appendChild(elemSubmit);
     elemSubmit = null;
+    
+    var elemDivZ = document.createElement('div');
+    elemDivZ.innerHTML = '&nbsp;';
+    elemForm.appendChild(elemDivZ);
+    
+    var elemAllClear = document.createElement('input');
+    elemAllClear.setAttribute('type', 'button');
+    elemAllClear.setAttribute('value', '一括初期化');
+    elemAllClear.addEventListener('click', deleteAllSavedData, false);
+    elemForm.appendChild(elemAllClear);
+    elemAllClear = null;
 
     elemDiv3.appendChild(elemForm);
     elemDiv.appendChild(elemDiv3);
 
     var sb = document.getElementById('sidebar');
-    //var sb = jQuery("#sidebar");
     sb.appendChild(elemDiv);
 }
 
@@ -1396,11 +1301,33 @@ function saveOptionData() {
 function loadOptionData() {
     var json_text = mygetValue(GMKEY + "-Options", null);
     if (json_text === null) {
-        return {"ci": "false", "im": "2"};
+        return {"ci": "false", "im": "3"};
     }
     mydebug("loadOptionData: json_text=" + json_text);
     var opObj = JSON.parse(json_text);
     return opObj;
+}
+
+/**
+ * オプション画面で一括初期化ボタンを押したときの処理。
+ * 本当に初期化してよいか確認した後、拠点画面で入力した値をすべて消去する。
+ * 「消去」と言っても実際にGM_setValueで保存した値が消えるわけではなく、
+ * いわゆる「工場初期化」のようにすべて最初の状態に戻るだけなので、
+ * Tampermonkeyのstorageには(初期化されたデータが)残る。
+ * @returns {undefined} なし
+ */
+function deleteAllSavedData() {
+    var canDelete = confirm("拠点で設定された数値等を含めて、すべて消去されます。本当によろしいですか？");
+    if (canDelete === false) {
+        alert('一括初期化を中止しました。');
+        return;
+    }
+    GM_deleteValue(GMKEY);
+    GM_deleteValue(GMKEY + '-Options');
+    alert('データをすべて消去し、初期化しました。');
+    var tid = setTimeout(function () {
+        location.reload();
+    }, 1000);
 }
 
 /**
