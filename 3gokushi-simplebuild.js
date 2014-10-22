@@ -64,7 +64,7 @@ function main() {
         appendOptionSettingWindow();
         return;
     }
-    if (location.pathname !== 'village.php') {
+    if (location.pathname !== '/village.php') {
         return;
     }
 
