@@ -64,6 +64,9 @@ function main() {
         appendOptionSettingWindow();
         return;
     }
+    if (location.pathname !== 'village.php') {
+        return;
+    }
 
     // *** 「都市」タブvillage.phpでの処理 ***
     // GM_関数を使って村・砦の基本情報paramsをロードする。
@@ -165,7 +168,7 @@ function getMapData() {
         f.dy = parseInt(result[2], 10);
         s = ar.title;
         ss = s.split(" ");
-        if (ss.length === 1) {  // 通常このif文は成立しないが、念のため書く
+        if (ss.length === 1) {  // 平地の場合はカウントしない
             continue;
         }
         f.name = ss[0];
