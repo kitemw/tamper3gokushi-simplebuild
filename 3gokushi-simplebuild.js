@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         3gokushi-simplebuild
 // @namespace    http://kite03.x10.bz/mw/
-// @version      0.1
+// @version      0.1.4
 // @description  ブラ三 機能を絞った自動施設建設 Tampermonkey用 v3.9
 // @author       kitemw
 // @match        http://*.3gokushi.jp/village.php
