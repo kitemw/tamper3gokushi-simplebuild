@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         3gokushi-simplebuild
 // @namespace    http://kite03.x10.bz/mw/
-// @version      0.1.4
+// @version      0.1.5
 // @description  ブラ三 機能を絞った自動施設建設 Tampermonkey用 v3.9
 // @author       kitemw
 // @match        http://*.3gokushi.jp/village.php
 // @match        http://*.3gokushi.jp/user/
 // @match        http://*.3gokushi.jp/user/index.php
+// @match        http://*.3gokushi.jp/card/deck.php*
 // @require      http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js
 // @grant GM_setValue
 // @grant GM_getValue
@@ -16,6 +17,7 @@
 // ==/UserScript==
 
 /* [[変更履歴]]
+ * 2014.10.26 v0.1.5  デッキ画面でセット先が現在選択中の村になるように変更。
  * 2014.10.25 v0.1.4  beyond風に、資源が足りなくて建設不可の施設を黄色表示。
  * 2014.10.22 v0.1.3  プロフィール画面にて一括初期化ボタンを追加。
  * 2014.10.21 v0.1.2  城・村・砦でレベルアップしなかったバグを修正。
@@ -63,6 +65,10 @@ function main() {
     if (location.pathname === '/user/' || location.pathname === '/user/index.php') {
         getUserProf(document);
         appendOptionSettingWindow();
+        return;
+    }
+    if (location.pathname === '/card/deck.php') {
+        changeVillageSetIfNeeded();
         return;
     }
     if (location.pathname !== '/village.php') {
@@ -1491,6 +1497,24 @@ function sformat(template, obj) {
     });
 }
 
+/**
+ * デッキ画面で、デッキへのセット先が常に本拠地になっている仕様を、
+ * 現在選択中の村・砦になるように変更する
+ * @returns {undefined}
+ */
+function changeVillageSetIfNeeded() {
+    var name = jQuery('#sidebar .basename li.on span')[0].innerText;
+    var ops = jQuery('#cardFileList select option');
+    var i;
+    var n = ops.length;
+    var op;
+    for (i = 0; i < n; i++) {
+        op = ops[i];
+        if (op.innerText === name) {
+            op.selected = true;
+        }
+    }
+}
 /**
  * (デバッグ用)
  * @param {string} a - コンソールに出力したい文字列
