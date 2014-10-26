@@ -1171,7 +1171,7 @@ function canBuildAnyFacility(params, facilities) {
     var n = BUILDKEYS.length;
     var key;
     var sj;
-    for (i = 0; i < n - 1; i++) {
+    for (i = 0; i < n; i++) {
         key = BUILDKEYS[i][0];
         if (key === "kyoten") {
             sj = facilities.toJSON();
@@ -1202,15 +1202,23 @@ function canBuildAnyFacility(params, facilities) {
     var j;
     n = facilities.length;
     var name;
-    var lvl, v;
+    var lvl, v, maxlvl;
     var canBeBuilt = -1;
     for (i = 0; i < n; i++) {
         name = facilities[i].name;
+        if (name === "城" || name === "村" || name === "砦") {
+            name = "拠点";
+        }
         j = getBuildIndex(name);
         if (j === -1) {
             continue;
         }
         lvl = facilities[i].level;
+        maxlvl = getMaxFacilityLevel(name);
+        // 既に施設のレベルがMaxに達した時は何もしない
+        if (lvl === maxlvl) {
+            continue;
+        }
         if (costs[j][lvl][0] <= resources[0] &&
                 costs[j][lvl][1] <= resources[1] &&
                 costs[j][lvl][2] <= resources[2] &&
@@ -1241,9 +1249,6 @@ function canBuildAnyFacility(params, facilities) {
     return canBeBuilt;
 
     function getBuildIndex(name) {
-        if (name === "城" || name === "村" || name === "砦") {
-            name = "拠点";
-        }
         var j;
         var n = BUILDKEYS.length;
         for (j = 0; j < n; j++) {
